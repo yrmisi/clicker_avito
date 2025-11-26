@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>URL Shortener Frontend</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            padding: 20px;
+            margin: auto;
+        }
+        section {
+            margin-bottom: 24px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="url"] {
+            width: 80%;
+            padding: 8px;
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+        button {
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        #health-status, #short-url-result {
+            margin-top: 8px;
+            font-weight: bold;
+        }
+        #error-message {
+            color: red;
+            font-weight: bold;
+        }
+        a.short-url-link {
+            display: block;
+            margin-top: 8px;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple URL Shortener Frontend</h1>
+
+    <section>
+        <button id="btn-health">Check Health Status</button>
+        <div id="health-status"></div>
+    </section>
+
+    <section>
+        <form id="form-short-url">
+            <label for="input-long-url">Enter Long URL to Shorten:</label><br />
+            <input type="url" id="input-long-url" name="long_url" required placeholder="https://example.com" />
+            <br />
+            <button type="submit">Generate Short URL</button>
+        </form>
+        <div id="short-url-result"></div>
+        <div id="error-message"></div>
+    </section>
+
+    <section>
+        <label for="input-slug">Enter Slug to Redirect:</label><br />
+        <input type="text" id="input-slug" placeholder="YourSlugHere" />
+        <button id="btn-redirect">Go to URL</button>
+    </section>
+
+    <script>
+        const baseUrl = "http://127.0.0.1:8000";
+
+        document.getElementById("btn-health").addEventListener("click", async () => {
+            const statusDiv = document.getElementById("health-status");
+            statusDiv.textContent = "Checking...";
+            try {
+                const res = await fetch(baseUrl + "/health");
+                if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+                const data = await res.json();
+                statusDiv.textContent = "Health status: " + data.status;
+            } catch (err) {
+                statusDiv.textContent = "Error: " + err.message;
+            }
+        });
+
+        document.getElementById("form-short-url").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const longUrlInput = document.getElementById("input-long-url");
+            const shortUrlDiv = document.getElementById("short-url-result");
+            const errorDiv = document.getElementById("error-message");
+
+            shortUrlDiv.textContent = "";
+            errorDiv.textContent = "";
+
+            const longUrl = longUrlInput.value.trim();
+            if (!longUrl) {
+                errorDiv.textContent = "Please enter a valid URL.";
+                return;
+            }
+
+            try {
+                const res = await fetch(baseUrl + "/short_url", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ long_url: longUrl })
+                });
+
+                if (!res.ok) {
+                    const errorData = await res.json();
+                    throw new Error(errorData.detail || `HTTP error! Status: ${res.status}`);
+                }
+
+                const data = await res.json();
+                const link = data.link;
+
+                shortUrlDiv.innerHTML = `Short URL: <a href="${link}" target="_blank" class="short-url-link">${link}</a>`;
+            } catch (err) {
+                errorDiv.textContent = "Error: " + err.message;
+            }
+        });
+
+        document.getElementById("btn-redirect").addEventListener("click", () => {
+            const slugInput = document.getElementById("input-slug");
+            const slug = slugInput.value.trim();
+            if (!slug) {
+                alert("Please enter a slug to redirect.");
+                return;
+            }
+            const url = baseUrl + "/" + encodeURIComponent(slug);
+            window.open(url, "_blank");
+        });
+    </script>
+</body>
+</html>

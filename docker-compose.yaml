@@ -1,0 +1,64 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://web:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - my_network
+  nginx:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      web:
+        condition: service_started
+    networks:
+      - my_network
+  db:
+    image: postgres:17-alpine
+    restart: on-failure # The policy restarts the container if the exit code indicates an error.
+    env_file:
+      - src/.env
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U scott -d clicker"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - my_network
+  dbtest:
+    image: postgres:17-alpine
+    restart: on-failure # The policy restarts the container if the exit code indicates an error.
+    env_file:
+      - src/.env.test
+    ports:
+      - "5436:5432"
+    networks:
+      - my_network
+
+volumes:
+  postgres_data:
+
+networks:
+  my_network:
+    driver: bridge
