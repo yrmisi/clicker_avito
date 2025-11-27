@@ -2,8 +2,10 @@ services:
   web:
     build:
       context: .
-      dockerfile: src/Dockerfile
+      dockerfile: ./Dockerfile
     restart: unless-stopped
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     depends_on:
@@ -33,7 +35,7 @@ services:
     image: postgres:17-alpine
     restart: on-failure # The policy restarts the container if the exit code indicates an error.
     env_file:
-      - src/.env
+      - .env
     ports:
       - "5435:5432"
     healthcheck:
@@ -50,7 +52,7 @@ services:
     image: postgres:17-alpine
     restart: on-failure # The policy restarts the container if the exit code indicates an error.
     env_file:
-      - src/.env.test
+      - .env.test
     ports:
       - "5436:5432"
     networks:

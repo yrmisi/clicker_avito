@@ -1,4 +1,4 @@
-from utils import generate_slug, SlugCountInfo, is_valid_url
+from src.utils import generate_slug, SlugCountInfo, is_valid_url
 
 
 def test_generate_slug() -> None:

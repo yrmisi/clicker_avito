@@ -4,7 +4,7 @@ from typing import Annotated
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-BASE_DIR: Path = Path(__file__).resolve().parent
+BASE_DIR: Path = Path(__file__).resolve().parent.parent
 
 
 class DataBaseConfig(BaseSettings):

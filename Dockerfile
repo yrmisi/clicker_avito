@@ -1,4 +1,4 @@
-FROM python:3.13-slim-bookworm
+FROM python:3.14-slim-bookworm
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -19,19 +19,17 @@ RUN apt-get update && \
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --no-install-project
-
 COPY pyproject.toml uv.lock /app/
-RUN uv sync --frozen --no-cache
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-cache
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-COPY /src .
+COPY src/ ./src/
+COPY alembic/ ./alembic/
+COPY alembic.ini ./
 
 EXPOSE 8000
 
-# CMD ["uvicorn", "main:app", "--proxy-headers", "--workers", "3", "--host", "0.0.0.0", "--port", "8000"]
-CMD ["granian", "--interface", "asgi", "main:app", "--workers", "3", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["granian", "--interface", "asgi", "src.main:app", "--workers", "2", "--host", "0.0.0.0", "--port", "8000"]

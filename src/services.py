@@ -1,11 +1,11 @@
-from database import (
+from src.database import (
     AsyncSessionDep,
     add_slug_to_db,
     get_long_url_by_slug_from_db,
     get_slug_and_count_by_long_url_from_db,
 )
-from exceptions import InvalidURLError, NoLongFoundError, SlugAlreadyExistsDBError
-from utils import SlugCountInfo, generate_slug, is_valid_url
+from src.exceptions import InvalidURLError, NoLongFoundError, SlugAlreadyExistsDBError
+from src.utils import SlugCountInfo, generate_slug, is_valid_url
 
 
 async def get_slug(url: str, session: AsyncSessionDep) -> SlugCountInfo:

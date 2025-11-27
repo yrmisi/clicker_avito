@@ -3,8 +3,8 @@ from datetime import datetime, timezone
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from exceptions import SlugAlreadyExistsDBError
-from utils import SlugCountInfo
+from src.exceptions import SlugAlreadyExistsDBError
+from src.utils import SlugCountInfo
 
 from .db_config import AsyncSessionDep
 from .models import ShortURL

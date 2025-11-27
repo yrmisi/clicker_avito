@@ -4,10 +4,10 @@ from fastapi import APIRouter, Body, status
 from fastapi.exceptions import HTTPException
 from fastapi.responses import RedirectResponse
 
-from database import AsyncSessionDep
-from exceptions import InvalidURLError, NoLongFoundError, SlugAlreadyExistsDBError
-from services import get_long_url, get_slug
-from utils import SlugCountInfo
+from src.database import AsyncSessionDep
+from src.exceptions import InvalidURLError, NoLongFoundError, SlugAlreadyExistsDBError
+from src.services import get_long_url, get_slug
+from src.utils import SlugCountInfo
 
 router_slug: APIRouter = APIRouter()
 

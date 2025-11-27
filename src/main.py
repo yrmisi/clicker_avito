@@ -2,8 +2,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from database import Base, engine
-from routers import router_slug
+from src.database import Base, engine
+from src.routers import router_slug
 
 
 @asynccontextmanager
