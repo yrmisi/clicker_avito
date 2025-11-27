@@ -41,16 +41,8 @@ asyncio_mode = "auto"
 addopts = "--cov=src -v -x --cov-report html"
 testpaths = ["tests"]
 pythonpath = "src"
-# markers = [
-#     "conf: mark test for config",
-#     "user: mark test for router users",
-#     "tweet: mark test for router tweets",
-#     "media: mark test for router medias",
-#     "other: mark test as other",
-# ]
 
 [tool.alembic]
-
 # path to migration scripts.
 # this is typically a path given in POSIX (e.g. forward slashes)
 # format, relative to the token %(here)s which refers to the location of this
@@ -109,6 +101,7 @@ prepend_sys_path = [
 # This section defines scripts or Python functions that are run
 # on newly generated revision scripts.  See the documentation for further
 # detail and examples
+
 [[tool.alembic.post_write_hooks]]
 # format using "black" - use the console_scripts runner,
 # against the "black" entrypoint
