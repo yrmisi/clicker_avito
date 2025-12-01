@@ -45,4 +45,4 @@ COPY alembic/ ./alembic/
 COPY alembic.ini ./
 
 EXPOSE 8000
-CMD ["granian", "--interface", "asgi", "src.main:app", "--workers", "2", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["granian", "--interface", "asgi", "src.main:app", "--workers", "2", "--host", "0.0.0.0", "--port", "8000", "--access-log"]
