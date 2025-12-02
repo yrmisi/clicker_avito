@@ -12,11 +12,15 @@ class DataBaseConfig(BaseSettings):
 
     user: Annotated[str | None, Field(alias="POSTGRES_USER")] = None
     password: Annotated[str | None, Field(alias="POSTGRES_PASSWORD")] = None
-    host: Annotated[str | None, Field(alias="POSTGRES_HOST")] = None
-    port: Annotated[int | None, Field(alias="POSTGRES_PORT")] = None
+    host: Annotated[str, Field(alias="POSTGRES_HOST")] = "db"
+    port: Annotated[int, Field(ge=1024, le=65535, alias="POSTGRES_PORT")] = 5432
     dbname: Annotated[str | None, Field(alias="POSTGRES_DB")] = None
     driver: str = "asyncpg"
-    model_config = SettingsConfigDict(env_file=BASE_DIR / ".env", env_file_encoding="utf-8")
+
+    model_config = SettingsConfigDict(
+        env_file=BASE_DIR / ".env",
+        env_file_encoding="utf-8",
+    )
 
     def sqal_pg_url(
         self,
@@ -32,7 +36,8 @@ class DataBaseConfig(BaseSettings):
 
 
 class DataBaseTestConfig(DataBaseConfig):
-    """  """
+    """ """
+
     model_config = SettingsConfigDict(env_file=BASE_DIR / ".env.test", env_file_encoding="utf-8")
 
 
