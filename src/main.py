@@ -20,7 +20,7 @@ app = FastAPI(title="URL Shortener", lifespan=lifespan, root_path="/api")
 
 @app.get("/health")
 async def health_check() -> dict[str, str]:
-    """ """
+    """Website health check."""
     return {"status": "ok"}
 
 
