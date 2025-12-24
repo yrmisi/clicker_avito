@@ -57,9 +57,29 @@ services:
       - "5436:5432"
     networks:
       - my_network
+  redis:
+    image: redis:8.2-bookworm
+    restart: unless-stopped
+    env_file:
+    - .env
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+    - my_network
 
 volumes:
   postgres_data:
+  redis_data:
 
 networks:
   my_network:
