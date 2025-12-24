@@ -1,10 +1,11 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Body, status
+from fastapi import APIRouter, Body, Depends, status
 from fastapi.exceptions import HTTPException
 from fastapi.responses import RedirectResponse
 
 from src.database import AsyncSessionDep
+from src.dependencies import rate_limit_short_url
 from src.exceptions import InvalidURLError, NoLongFoundError, SlugAlreadyExistsDBError
 from src.services import get_long_url, get_slug
 from src.utils import SlugCountInfo
@@ -12,7 +13,11 @@ from src.utils import SlugCountInfo
 router_slug: APIRouter = APIRouter()
 
 
-@router_slug.post("/short_url", status_code=status.HTTP_201_CREATED)
+@router_slug.post(
+    "/short_url",
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(rate_limit_short_url)],
+)
 async def generate_slug(
     long_url: Annotated[str, Body(embed=True)],
     session: AsyncSessionDep,

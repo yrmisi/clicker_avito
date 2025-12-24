@@ -135,6 +135,7 @@
         });
 
         const data = await response.json();
+        const retryAfter = response.headers.get('Retry-After');
 
         if (response.ok) {
           const shortUrl = data.link;
@@ -163,8 +164,16 @@
               alert('Failed to copy URL');
             }
           });
+        } else if (response.status === 429) {
+          if (retryAfter) {
+            errorDiv.textContent = `${data.detail} You have exceeded the request limit. Please try again in ${retryAfter} seconds.`;
+          } else {
+            errorDiv.textContent = data.detail || 'You have exceeded your request limit. Please try again later.';
+          }
+        } else if (response.status === 422) {
+          errorDiv.textContent = data.detail || 'Invalid URL.';
         } else {
-          errorDiv.textContent = data.detail || 'Failed to shorten URL';
+          errorDiv.textContent = data.detail || 'Failed to shorten URL.';
         }
       } catch (err) {
         errorDiv.textContent = 'Network error. Is the server running?';
