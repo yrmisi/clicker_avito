@@ -5,9 +5,9 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
 
-from config import settings
-from database import Base, get_async_session
-from main import app
+from src.config import settings
+from src.database import Base, get_async_session
+from src.main import app
 
 engine = create_async_engine(
     settings.dbtest.sqal_pg_url(),
