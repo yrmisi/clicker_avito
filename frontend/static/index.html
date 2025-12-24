@@ -147,8 +147,8 @@
             body: JSON.stringify({ long_url: longUrl }),
           });
 
-          const retryAfter = response.headers.get("Retry-After");
           const data = await response.json();
+          const retryAfter = response.headers.get("Retry-After");
 
           if (response.ok) {
             const shortUrl = data.link;

@@ -22,7 +22,6 @@ repos:
       - id: black
 
   - repo: https://github.com/astral-sh/uv-pre-commit
-    # uv version.
     rev: 0.9.15
     hooks:
       - id: uv-lock
@@ -41,3 +40,12 @@ repos:
       - id: prettier
         types: [html]
         args: [--write]
+
+  - repo: local
+    hooks:
+      - id: htmlhint
+        name: htmlhint
+        entry: npx htmlhint
+        language: node
+        types: [html]
+        args: ["--config", ".htmlhintrc"]
