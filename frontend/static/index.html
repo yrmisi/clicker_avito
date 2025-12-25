@@ -1,145 +1,159 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>URL Shortener</title>
-  <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      background: #f9f9f9;
-    }
-    h1 { text-align: center; color: #333; }
-    input, button {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      box-sizing: border-box;
-      font-size: 16px;
-    }
-    input { border: 1px solid #ccc; border-radius: 4px; }
-    button {
-      background: #0d6efd;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:hover { background: #0b5ed7; }
-    button:disabled {
-      background: #6c757d;
-      cursor: not-allowed;
-    }
-    #result {
-      margin-top: 20px;
-      padding: 12px;
-      background: #e9ecef;
-      border-radius: 4px;
-      word-break: break-all;
-    }
-    #error {
-      color: #dc3545;
-      margin-top: 10px;
-    }
-    /* Стили для кнопки копирования */
-    #copyBtn {
-      padding: 6px 12px;
-      background: #28a745;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      font-size: 14px;
-      min-width: 80px;
-      transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    #copyBtn:hover {
-      background-color: #218838;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-    }
-    #copyBtn:active {
-      transform: translateY(1px);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-  </style>
-</head>
-<body>
-  <h1>🔗 URL Shortener</h1>
-  <form id="urlForm">
-    <label for="longUrl">Enter long URL:</label>
-    <input
-      type="url"
-      id="longUrl"
-      name="longUrl"
-      placeholder="https://example.com/very/long/path"
-      required
-    />
-    <button type="submit" id="submitBtn">Shorten URL</button>
-  </form>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL Shortener</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #f9f9f9;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      input,
+      button {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
+      input {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        background: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #0b5ed7;
+      }
+      button:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+      }
+      #result {
+        margin-top: 20px;
+        padding: 12px;
+        background: #e9ecef;
+        border-radius: 4px;
+        word-break: break-all;
+      }
+      #error {
+        color: #dc3545;
+        margin-top: 10px;
+      }
+      /* Стили для кнопки копирования */
+      #copyBtn {
+        padding: 6px 12px;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        font-size: 14px;
+        min-width: 80px;
+        transition:
+          background-color 0.2s ease,
+          box-shadow 0.2s ease,
+          transform 0.1s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      #copyBtn:hover {
+        background-color: #218838;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+      }
+      #copyBtn:active {
+        transform: translateY(1px);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔗 URL Shortener</h1>
+    <form id="urlForm">
+      <label for="longUrl">Enter long URL:</label>
+      <input
+        type="url"
+        id="longUrl"
+        name="longUrl"
+        placeholder="https://example.com/very/long/path"
+        required
+      />
+      <button type="submit" id="submitBtn">Shorten URL</button>
+    </form>
 
-  <div id="error"></div>
-  <div id="result"></div>
+    <div id="error"></div>
+    <div id="result"></div>
 
-  <script>
-    const form = document.getElementById('urlForm');
-    const resultDiv = document.getElementById('result');
-    const errorDiv = document.getElementById('error');
-    const submitBtn = document.getElementById('submitBtn');
+    <script>
+      const form = document.getElementById("urlForm");
+      const resultDiv = document.getElementById("result");
+      const errorDiv = document.getElementById("error");
+      const submitBtn = document.getElementById("submitBtn");
 
-    // Функция копирования в буфер обмена
-    async function copyToClipboard(text) {
-      try {
-        await navigator.clipboard.writeText(text);
-        return true;
-      } catch (err) {
-        // fallback для старых браузеров
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        textArea.style.position = "fixed";  // невидимый
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
+      // Функция копирования в буфер обмена
+      async function copyToClipboard(text) {
         try {
-          const success = document.execCommand('copy');
-          document.body.removeChild(textArea);
-          return success;
-        } catch (fallbackErr) {
-          document.body.removeChild(textArea);
-          return false;
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch (err) {
+          // fallback для старых браузеров
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          textArea.style.position = "fixed"; // невидимый
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          try {
+            const success = document.execCommand("copy");
+            document.body.removeChild(textArea);
+            return success;
+          } catch (fallbackErr) {
+            document.body.removeChild(textArea);
+            return false;
+          }
         }
       }
-    }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const longUrl = document.getElementById('longUrl').value.trim();
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const longUrl = document.getElementById("longUrl").value.trim();
 
-      errorDiv.textContent = '';
-      resultDiv.innerHTML = '';
-      submitBtn.disabled = true;
+        errorDiv.textContent = "";
+        resultDiv.innerHTML = "";
+        submitBtn.disabled = true;
 
-      try {
-        const response = await fetch('/api/short_url', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ long_url: longUrl })
-        });
+        try {
+          const response = await fetch("/api/short_url", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ long_url: longUrl }),
+          });
 
-        const data = await response.json();
+          const data = await response.json();
+          const retryAfter = response.headers.get("Retry-After");
 
-        if (response.ok) {
-          const shortUrl = data.link;
-          const creationCount = data.creation_count; // ← получаем link и creation_count из ручки
-          resultDiv.innerHTML = `
+          if (response.ok) {
+            const shortUrl = data.link;
+            const creationCount = data.creation_count; // ← получаем link и creation_count из ручки
+            resultDiv.innerHTML = `
             <strong>Short URL:</strong>
             <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px; flex-wrap: wrap;">
               <a href="${shortUrl}" target="_blank" style="flex-grow: 1; word-break: break-all;">${shortUrl}</a>
@@ -149,30 +163,42 @@
               This link has been generated <strong>${creationCount}</strong> time(s).
             </div>
           `;
-          document.getElementById('copyBtn').addEventListener('click', async () => {
-            const success = await copyToClipboard(shortUrl);
-            if (success) {
-              const btn = document.getElementById('copyBtn');
-              btn.textContent = '✓ Copied!';
-              btn.style.background = '#218838';
-              setTimeout(() => {
-                btn.textContent = '📋 Copy';
-                btn.style.background = '#28a745';
-              }, 2000);
+            document
+              .getElementById("copyBtn")
+              .addEventListener("click", async () => {
+                const success = await copyToClipboard(shortUrl);
+                if (success) {
+                  const btn = document.getElementById("copyBtn");
+                  btn.textContent = "✓ Copied!";
+                  btn.style.background = "#218838";
+                  setTimeout(() => {
+                    btn.textContent = "📋 Copy";
+                    btn.style.background = "#28a745";
+                  }, 2000);
+                } else {
+                  alert("Failed to copy URL");
+                }
+              });
+          } else if (response.status === 429) {
+            if (retryAfter) {
+              errorDiv.textContent = `${data.detail} You have exceeded the request limit. Please try again in ${retryAfter} seconds.`;
             } else {
-              alert('Failed to copy URL');
+              errorDiv.textContent =
+                data.detail ||
+                "You have exceeded your request limit. Please try again later.";
             }
-          });
-        } else {
-          errorDiv.textContent = data.detail || 'Failed to shorten URL';
+          } else if (response.status === 422) {
+            errorDiv.textContent = data.detail || "Invalid URL.";
+          } else {
+            errorDiv.textContent = data.detail || "Failed to shorten URL.";
+          }
+        } catch (err) {
+          errorDiv.textContent = "Network error. Is the server running?";
+          console.error(err);
+        } finally {
+          submitBtn.disabled = false;
         }
-      } catch (err) {
-        errorDiv.textContent = 'Network error. Is the server running?';
-        console.error(err);
-      } finally {
-        submitBtn.disabled = false;
-      }
-    });
-  </script>
-</body>
+      });
+    </script>
+  </body>
 </html>

@@ -22,7 +22,6 @@ repos:
       - id: black
 
   - repo: https://github.com/astral-sh/uv-pre-commit
-    # uv version.
     rev: 0.9.15
     hooks:
       - id: uv-lock
@@ -34,3 +33,19 @@ repos:
         #   - --no-header
         #   - --no-dev
         #   - --output-file=requirements.txt
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: "v4.0.0-alpha.8"
+    hooks:
+      - id: prettier
+        types: [html]
+        args: [--write]
+
+  - repo: local
+    hooks:
+      - id: htmlhint
+        name: htmlhint
+        entry: npx htmlhint
+        language: node
+        types: [html]
+        args: ["--config", ".htmlhintrc"]

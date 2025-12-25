@@ -218,3 +218,7 @@ __marimo__/
 # Project files
 .env.test
 postgres_data/
+redis_data/
+node_modules/
+package-lock.json
+package.json
