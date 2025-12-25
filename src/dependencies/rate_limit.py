@@ -1,15 +1,16 @@
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, Request, status
+from redis.asyncio import Redis
 
 from src.config import settings
 from src.core import get_redis
 from src.services import RateLimiter
 
 
-def get_rate_limiter() -> RateLimiter:
+def get_rate_limiter(r: Annotated[Redis, Depends(get_redis)]) -> RateLimiter:
     """ """
-    return RateLimiter(get_redis())
+    return RateLimiter(r)
 
 
 def rate_limiter_factory(
