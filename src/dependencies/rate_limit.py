@@ -38,10 +38,10 @@ def rate_limiter_factory(
         if exceeded:
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                detail="You have exceeded your request limit. Please try again later.",
+                detail=f"You have exceeded your request limit. Please try again in {window_seconds} seconds.",
                 headers={
-                    "Retry-After": f"{settings.redis_db.short_url_window}",
-                    "X-RateLimit-Limit": f"{settings.redis_db.short_url_limit}",
+                    "Retry-After": str(window_seconds),
+                    "X-RateLimit-Limit": str(max_requests),
                     "X-RateLimit-Remaining": "0",
                 },
             )
