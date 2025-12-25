@@ -4,7 +4,7 @@ from fastapi import Depends, HTTPException, Request, status
 
 from src.config import settings
 from src.core import get_redis
-from src.utils import RateLimiter
+from src.services import RateLimiter
 
 
 def get_rate_limiter() -> RateLimiter:
