@@ -11,6 +11,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://web:8000/health"]
       interval: 30s
@@ -74,6 +76,17 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+    - my_network
+  redistest:
+    image: redis:8.2-bookworm
+    restart: unless-stopped
+    env_file:
+    - .env
+    ports:
+      - "6378:6379"
+    depends_on:
+      - dbtest
     networks:
     - my_network
 

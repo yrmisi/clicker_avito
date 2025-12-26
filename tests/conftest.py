@@ -1,11 +1,13 @@
 from typing import Any, AsyncGenerator, Generator
 
-import pytest
 from httpx import ASGITransport, AsyncClient
+import pytest
+from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
 
 from src.config import settings
+from src.core import get_redis
 from src.database import Base, get_async_session
 from src.main import app
 
@@ -24,11 +26,35 @@ async def session() -> AsyncGenerator[AsyncSession, None]:
         await sess.rollback()
 
 
+def get_test_redis() -> Redis:
+    return Redis(
+        host=settings.redis_test.host,
+        port=settings.redis_test.port,
+        password=settings.redis_test.password,
+    )
+
+
+@pytest.fixture(scope="function", autouse=True)
+async def setup_test_redis() -> AsyncGenerator[Redis, None]:
+    r = get_test_redis()
+    await r.ping()  # type: ignore
+    await r.flushdb()
+    yield r
+    await r.aclose()
+
+
 @pytest.fixture(autouse=True)
-def override_dependencies(session: AsyncSession) -> Generator[None, Any, None]:
+def override_dependencies(
+    session: AsyncSession,
+    setup_test_redis: Redis,
+) -> Generator[None, Any, None]:
     app.dependency_overrides[get_async_session] = lambda: session
-    yield
-    app.dependency_overrides.clear()
+    app.dependency_overrides[get_redis] = lambda: setup_test_redis
+    try:
+        yield
+    finally:
+        app.dependency_overrides.pop(get_async_session, None)
+        app.dependency_overrides.pop(get_redis, None)
 
 
 @pytest.fixture(scope="session", autouse=True)
